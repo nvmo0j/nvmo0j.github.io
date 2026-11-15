@@ -564,3 +564,6 @@ b { color: var(--mint); font-weight: 600; }
 /* night photos: lift the shadows a bit */
 .snap.dark .snap-img img { filter: brightness(1.75) contrast(1.05) saturate(.9); }
 .snap.dark:hover .snap-img img { filter: brightness(1.9) contrast(1.08) saturate(1.1); }
+
+.viewer-link { display: inline-block; margin-top: 6px; color: var(--sky); text-decoration: none; }
+.viewer-link:hover { color: var(--mint); text-decoration: underline; }

@@ -949,6 +949,9 @@ function cameraRoll() {
     $("#viewer-cap").textContent = $("figcaption", s).textContent;
     $("#viewer-loc").textContent = "📍 " + s.dataset.loc;
     $("#viewer-note").textContent = s.dataset.note || "";
+    const link = $("#viewer-link");
+    link.hidden = !s.dataset.link;
+    if (s.dataset.link) { link.href = s.dataset.link; link.textContent = s.dataset.linkText || "read more ↗"; }
   };
   snaps.forEach((s) => {
     s.tabIndex = 0; s.setAttribute("role", "button");
