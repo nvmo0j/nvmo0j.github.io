@@ -87,21 +87,16 @@
           </ul>
         </article>
 
-        <!-- AI agent terminal -->
-        <article class="card tilt agent" style="--accent: var(--mint)">
-          <div class="win-bar"><i></i><i></i><i></i><span>jasmine-agent — zsh</span></div>
+        <!-- jasmine.ai: a chat that answers in my own voice (replies live in main.js → AGENT_BRAIN) -->
+        <article class="card agent" style="--accent: var(--mint)">
+          <div class="win-bar"><i></i><i></i><i></i><span>jasmine.ai — chat</span><span class="agent-status"><b class="dot-live"></b>online</span></div>
           <div class="agent-out" id="agent-out" aria-live="polite"></div>
+          <div class="agent-quick" id="agent-quick"></div>
           <form class="agent-in" id="agent-form" autocomplete="off">
             <label for="agent-input" class="mono">❯</label>
-            <input id="agent-input" class="mono" placeholder="ask me: classes, activities, hobbies, games…" />
+            <input id="agent-input" placeholder="say hi, or ask me anything…" maxlength="300" />
+            <button class="agent-send mono" type="submit" aria-label="Send">send ↵</button>
           </form>
-          <div class="agent-quick">
-            <button data-cmd="classes">classes</button>
-            <button data-cmd="activities">activities</button>
-            <button data-cmd="hobbies">hobbies</button>
-            <button data-cmd="games">games</button>
-            <button data-cmd="fun fact">fun fact</button>
-          </div>
         </article>
 
         <!-- interests -->
@@ -112,14 +107,28 @@
             <div class="orb" aria-hidden="true"><span>AI</span></div>
             <div>
               <strong>AI &amp; agents</strong>
-              <p class="small">Claude · Gemini · OpenAI. prompt-engineering autonomous coding agents (Devin) and embedding-based matching.</p>
+              <p class="small">Claude · Gemini · OpenAI. prompt-engineering autonomous coding agents (Devin), embedding-based matching, and turning the chat on this page into a real AI version of me.</p>
             </div>
           </div>
           <div class="interest-row">
-            <div class="orb chip-orb" aria-hidden="true"><span>⌁</span></div>
+            <div class="orb chip-orb" aria-hidden="true"><span>π5</span></div>
             <div>
-              <strong>hardware</strong>
-              <p class="small">computer organization &amp; design, assembly, and how the bits actually move. leaning toward computer engineering.</p>
+              <strong>Raspberry Pi 5 &amp; hardware</strong>
+              <p class="small">a tiny computer i can actually wire things to. computer organization, assembly, and how the bits really move. leaning toward computer engineering.</p>
+            </div>
+          </div>
+          <div class="interest-row">
+            <div class="orb num-orb" aria-hidden="true"><span>∫</span></div>
+            <div>
+              <strong>numerical analysis</strong>
+              <p class="small">where my math minor meets CS: how computers approximate roots, integrals and linear systems, and how tiny floating-point errors snowball.</p>
+            </div>
+          </div>
+          <div class="interest-row">
+            <div class="orb term-orb" aria-hidden="true"><span>&lt;GO&gt;</span></div>
+            <div>
+              <strong>Bloomberg Terminal</strong>
+              <p class="small">real-time market data, news and analytics packed into one very dense screen. a masterclass in data pipelines and power-user UI.</p>
             </div>
           </div>
         </article>

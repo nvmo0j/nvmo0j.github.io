@@ -6,28 +6,27 @@
 
 const CONTENT = {
   email: "jasminejacobs11@icloud.com",
-  // EDIT: answers for the little agent terminal in the intro
-  agent: {
-    whoami: "jasmine jacobs · cs @ penn state ('27), math minor.\nchicago → state college. i like building things people actually use.",
-    classes: "· programming & computation fundamentals\n· data structures & algorithms\n· linear algebra\n· probability\n· systems programming\n· database management\n· computer organization & design",
-    activities: "· president, girls who code psu\n· society of women engineers (SWE)\n· association of women in computing\n· national society of black engineers (NSBE)\n· just wrapped: infra production services intern @ BNY",
-    hobbies: "· collecting simiski figures (see the shelf ↓)\n· chai latte runs\n· jazz and classical music on repeat\n· tinkering with AI agents\n· ✎ ",
-    games: "currently playing:\n· ✎ krillion, zetamac, sims 4, and soduku",
-    music: "ambient, house, and afro jazz, mostly. hit the jazz button in the top right ♪",
-    stack: "python (pandas, numpy) · swift/swiftui · java · c/c++ · sql · assembly\nfirebase · supabase · docker · gitlab ci/cd · qlik sense",
-    contact: "email → jasminejacobs11@icloud.com\nor open lvl 5 on the shelf ↓",
-    funFacts: [
-      "only 32.03% of 2×2 binary matrix pairs commute. i checked all 256.",
-      "i designed the Rider Report App Store preview screens (swipe them in lvl 2).",
-      "i was on the IT team for Chicago Public Safety HQ during the CrowdStrike outage.",
-      "the flower up top is a few hundred lines of three.js. no 3d models.",
-      "my BNY pipeline chewed through 740K+ vulnerability records a week.",
-      "i really love even numbers",
-      "im the tech grandmaster in my household",
-      "im the youngest child!",
-      "im the first (soon to be) computer scientist in my family"
-    ],
+  linkedin: "https://www.linkedin.com/in/jasmine-jacobs-2ab8342bb/",
+
+  // EDIT: little blanks only you can fill in. Leave "" and the chat just skips them.
+  me: {
+    games: "",        // e.g. "stardew valley and mario kart"
+    piProject: "",    // e.g. "a little weather station that posts to my phone"
+    favoriteBoba: "", // e.g. "brown sugar milk tea, 50% sweet"
   },
+
+  // Optional: point this at your own AI endpoint later to make the chat a real LLM.
+  // It gets POST { messages: [{role, content}] } and should return { reply: "..." }.
+  // Leave "" to use the built-in replies below (works on GitHub Pages, no keys needed).
+  agentEndpoint: "",
+
+  funFacts: [
+    "only 32.03% of 2×2 binary matrix pairs commute. i checked all 256 of them.",
+    "i designed the Rider Report App Store preview screens. you can swipe them in lvl 2!",
+    "i was on the IT team at Chicago Public Safety HQ during the CrowdStrike outage. wild week.",
+    "the flower at the top of this page is a few hundred lines of three.js. no 3d models at all.",
+    "my BNY pipeline chewed through 740K+ vulnerability records a week.",
+  ],
 };
 
 /* ───────── tiny helpers ───────── */
@@ -324,44 +323,237 @@ function reveals() {
   els.forEach((el, i) => { el.style.transitionDelay = `${(i % 4) * 70}ms`; io.observe(el); });
 }
 
-/* ═════════ 5. intro: agent terminal ═════════ */
+/* ═════════ 5. intro: jasmine.ai, a chat in my own voice ═════════
+   Every reply below is written in first person, the way I'd say it.
+   EDIT freely: `keys` are words that trigger a reply, `say` is a list of
+   ways I might answer (one is picked at random), `more` is what I say if
+   someone asks "tell me more", `next` are the suggestion chips shown after. */
+const AGENT_BRAIN = [
+  { id: "greet", keys: ["hi", "hey", "hello", "yo", "sup", "hiya", "howdy", "good morning", "good afternoon", "good evening", "whats up"],
+    say: [(c) => `hey${c.nameBit}! 👋 what do you want to know?`, (c) => `hi hi${c.nameBit}! ask me anything: school, projects, what i'm nerding out on lately.`],
+    next: ["who are you?", "what are you working on?", "fun fact"] },
+  { id: "how", keys: ["how are you", "hows it going", "how you doing", "how r u", "hru", "how is your day"],
+    say: ["honestly? pretty good. probably holding a boba right now 🧋 how about you?", "doing good! currently in senior-year mode: classes, girls who code, and building fun stuff on the side."],
+    next: ["what are you working on?", "what's on the shelf?"] },
+  { id: "about", keys: ["who are you", "about you", "about yourself", "introduce", "tell me about", "who is jasmine", "whoami", "who r u"],
+    say: ["i'm jasmine! a senior studying computer science at penn state with a math minor, graduating may 2027. i'm president of girls who code psu, i've interned at BNY, and i love building things people actually use, like rider report."],
+    more: "the short version of what drives me: real problems + real users. rider report helps chicago commuters stay safe, my BNY pipeline helped leadership actually see their vulnerability backlog, and girls who code is how i pay it forward.",
+    next: ["rider report?", "your internships", "what are you nerding out on?"] },
+  { id: "school", keys: ["school", "college", "university", "penn state", "psu", "major", "minor", "degree", "graduate", "graduation", "year", "senior", "study"],
+    say: ["computer science major, math minor, in penn state's college of engineering. i graduate may 2027, so it's senior year 🎓"],
+    next: ["favorite classes?", "clubs?"] },
+  { id: "home", keys: ["from", "hometown", "where do you live", "chicago", "home", "grow up", "grew up"],
+    say: ["chicago → state college. chicago is where i built rider report and did my first two internships, so a lot of my story starts there."],
+    next: ["rider report?", "what was the bean photo?"] },
+  { id: "classes", keys: ["class", "classes", "course", "courses", "coursework", "taking", "took"],
+    say: ["so far: programming & computation fundamentals, data structures & algorithms, linear algebra, probability, systems programming, database management, and computer organization & design."],
+    more: "the low-level ones (computer organization, systems programming) are a big reason i'm leaning toward computer engineering. once you see how the bits move, you can't unsee it.",
+    next: ["tell me more", "numerical analysis?", "hardware?"] },
+  { id: "clubs", keys: ["club", "clubs", "girls who code", "gwc", "swe", "nsbe", "awc", "involved", "involvement", "activities", "leadership", "president"],
+    say: ["i'm president of girls who code at penn state! i'm also in SWE (society of women engineers), the association of women in computing, and NSBE."],
+    more: "running gwc is honestly one of my favorite things. it's the community i wish every girl walking into her first cs class had. there's a photo of us in lvl 4 on the shelf.",
+    next: ["tell me more", "your internships"] },
+  { id: "work", keys: ["experience", "internship", "internships", "intern", "work", "job", "jobs", "worked"],
+    say: ["three so far: infrastructure production services at BNY (summer 2026), software engineering at everyone can code chicago (2024–25, that's rider report), and IT at SDI presence (summer 2024)."],
+    next: ["what did you do at BNY?", "rider report?", "SDI?"] },
+  { id: "bny", keys: ["bny", "bank of new york", "pittsburgh", "pipeline", "vulnerability", "qlik", "bnyconnect"],
+    say: ["at BNY i built a weekly reporting pipeline (python/pandas, qlik sense, power query, docker) that cleaned 740K+ vulnerability records and briefed leadership every day. i also designed a remediation-routing framework that surfaced an 86.9% patchable rate and helped cut the backlog by 24,280 records."],
+    more: "my favorite side project there was BNYConnect, an AI employee-matching prototype. i specified embedding-based similarity (skills, hobbies, mentorship goals) and prompt-engineered devin, an autonomous coding agent, to build the first version through gitlab ci/cd.",
+    next: ["tell me more", "AI stuff?"] },
+  { id: "sdi", keys: ["sdi", "sdi presence", "it intern", "data center", "crowdstrike", "powershell"],
+    say: ["at SDI presence i supported data center ops for chicago public safety HQ: decommissioning servers, asset inventory, python + powershell automation. and yes, i was there for the crowdstrike outage. great crash course in what 'critical systems' means."],
+    next: ["your internships", "hardware?"] },
+  { id: "rider", keys: ["rider report", "rider", "cta", "app", "ios", "swift", "swiftui", "firebase", "firestore", "train", "everyone can code"],
+    say: ["rider report is an iOS app for chicago CTA riders to share live updates and safety reports. i built the real-time map view in swiftui + firestore, with location filtering and one-tap 911. it's 5.0★ on the app store!"],
+    more: "on the backend side i designed the firestore data structures and query patterns (cut refresh latency 40%) and squashed bugs that dropped crash rates 25%. i also designed the app store screenshots, which you can swipe through on the 3d iphone in lvl 2.",
+    next: ["tell me more", "can i see the code?", "your research?"] },
+  { id: "code", keys: ["code", "github", "repo", "source"],
+    say: () => `my github is @nvmo0j, and more fun ai + personal projects are coming. the rider report repo is private, but email me (${CONTENT.email}) and i'll add you.`,
+    next: ["AI stuff?", "contact"] },
+  { id: "research", keys: ["research", "matrix", "matrices", "commutative", "commutativity", "poster", "paper", "numpy"],
+    say: ["i tested every pair of 2×2 binary matrices (all 256 of them) to see how often AB = BA. only 32.03% commute! you can run the experiment yourself in lvl 3."],
+    more: "my hypothesis was under 25%, so i was wrong in a fun way. over the first 16 pairs, 75% didn't commute, and it settled to 67.97% across the full set. mentored by robert a. zambanini, jr.",
+    next: ["tell me more", "numerical analysis?"] },
+  { id: "skills", keys: ["skills", "stack", "languages", "language", "tech stack", "tools", "python", "java", "c++", "sql"],
+    say: ["languages: python (pandas, numpy), swift, java, c/c++, sql, assembly. backend: firebase, supabase. tools: git, docker, gitlab ci/cd, xcode, linux. plus AI pair-programming with copilot and devin."],
+    next: ["AI stuff?", "rider report?"] },
+  { id: "nerd", keys: ["nerding", "interested in", "interests", "into lately", "obsessed", "passion", "excited about"],
+    say: ["right now: AI agents, the raspberry pi 5, numerical analysis, and the bloomberg terminal. pick one and i'll gush 😅"],
+    next: ["AI stuff?", "raspberry pi?", "numerical analysis?", "bloomberg terminal?"] },
+  { id: "ai", keys: ["ai", "artificial intelligence", "agent", "agents", "llm", "claude", "gemini", "openai", "chatgpt", "devin", "machine learning", "ml"],
+    say: ["AI is my current obsession. i've worked with claude, gemini and openai models, prompt-engineered devin at BNY, and next i want to turn this exact chat into a real AI version of me."],
+    more: "the goal: you talk to this window and it actually sounds like me, because it's grounded in my own writing, projects and opinions, not a generic chatbot.",
+    next: ["tell me more", "are you real?"] },
+  { id: "pi", keys: ["raspberry", "raspberry pi", "pi 5", "pi5", "rpi", "gpio"],
+    say: (c) => "the raspberry pi 5! it's a tiny computer you can actually wire things to, which is my excuse to mix hardware and code." + (CONTENT.me.piProject ? ` right now i'm building ${CONTENT.me.piProject}.` : " project reveal coming soon 👀"),
+    next: ["hardware?", "numerical analysis?"] },
+  { id: "hardware", keys: ["hardware", "computer engineering", "assembly", "circuits", "chips", "low level", "low-level"],
+    say: ["computer organization & design is where it clicked for me: assembly, datapaths, how the bits actually move. i'm leaning toward computer engineering, and the raspberry pi 5 is my playground."],
+    next: ["raspberry pi?", "favorite classes?"] },
+  { id: "numerical", keys: ["numerical", "numerical analysis", "numerical methods", "floating point", "approximation", "newton", "math"],
+    say: ["numerical analysis is where my math minor meets cs: how computers approximate roots, integrals and linear systems, and how tiny floating-point errors snowball into big ones. my matrix research was a little taste of that world."],
+    next: ["your research?", "bloomberg terminal?"] },
+  { id: "bbg", keys: ["bloomberg", "terminal", "finance", "markets", "stocks", "fintech", "trading"],
+    say: ["the bloomberg terminal! the keyboard alone is iconic. i love how it packs real-time market data, news and analytics into one very dense screen. it's basically a masterclass in data pipelines and power-user UI."],
+    next: ["what did you do at BNY?", "numerical analysis?"] },
+  { id: "hobbies", keys: ["hobby", "hobbies", "fun", "free time", "for fun", "weekend", "outside of"],
+    say: ["collecting tiny glow-in-the-dark figures (they inspired the shelf below), boba runs, jazz on repeat, and tinkering with AI and my raspberry pi."],
+    next: ["what's on the shelf?", "music?", "games?"] },
+  { id: "shelf", keys: ["shelf", "buddies", "buddy", "figures", "figure", "glow", "collect"],
+    say: ["the glow buddies on the shelf are inspired by the little glow-in-the-dark figures i collect. mine got antennas because… cs. click one to open a level!"],
+    next: ["hobbies?", "fun fact"] },
+  { id: "food", keys: ["boba", "food", "eat", "ramen", "drink", "tea", "coffee", "snack"],
+    say: () => "boba first, always 🧋" + (CONTENT.me.favoriteBoba ? ` my order: ${CONTENT.me.favoriteBoba}.` : "") + " ramen is a close second.",
+    next: ["hobbies?", "music?"] },
+  { id: "music", keys: ["music", "song", "jazz", "listen", "playlist"],
+    say: ["afro jazz on repeat. hit the jazz button in the top right corner and you'll hear what i mean ♪"],
+    next: ["hobbies?", "games?"] },
+  { id: "games", keys: ["game", "games", "gaming", "play", "playing", "video game"],
+    say: () => CONTENT.me.games ? `lately: ${CONTENT.me.games}. got recs? i'm listening.` : "ooh, i'm taking game recs right now. what should i play next?",
+    next: ["hobbies?", "fun fact"] },
+  { id: "bean", keys: ["bean", "spark", "sophomore spark", "capital one", "discover", "program"],
+    say: () => "that's me at the bean in chicago during the discover × capital one sophomore SPARK program, exploring the city with other college students. there's more in my linkedin post!",
+    next: ["contact", "your internships"] },
+  { id: "google", keys: ["google", "nyc", "new york"],
+    say: ["that's me visiting google's office in nyc. i had to get the neon sign picture 😄"],
+    next: ["your internships", "AI stuff?"] },
+  { id: "hire", keys: ["hire", "hiring", "recruiter", "recruiting", "looking for", "open to", "opportunity", "opportunities", "role", "roles", "new grad", "full time", "full-time", "available", "goals", "future", "after graduation"],
+    say: () => `i'm looking for software engineering, data, and AI roles (2027 new grad, plus internships). if you're hiring, i'd love to chat: ${CONTENT.email} 💌`,
+    next: ["contact", "your internships", "skills?"] },
+  { id: "contact", keys: ["contact", "email", "reach", "linkedin", "connect", "resume", "cv", "talk to you"],
+    say: () => `email is best: ${CONTENT.email}. i'm also on linkedin (lvl 5 on the shelf has every link). want my resume? just email me!`,
+    next: ["fun fact", "who are you?"] },
+  { id: "fact", keys: ["fun fact", "fact", "surprise me", "random", "something interesting"],
+    say: () => CONTENT.funFacts[Math.floor(Math.random() * CONTENT.funFacts.length)],
+    next: ["another one", "your research?"] },
+  { id: "real", keys: ["are you real", "are you ai", "are you a bot", "bot", "robot", "real person", "is this ai", "chatbot", "human"],
+    say: ["half and half? every answer here is something i (the real jasmine) wrote in my own words. it's not an LLM yet, so if i miss something, email the real me. making this a true AI version of me is on my roadmap!"],
+    next: ["AI stuff?", "contact"] },
+  { id: "joke", keys: ["joke", "funny", "make me laugh"],
+    say: ["why do programmers prefer dark mode? because light attracts bugs 🐛", "there are 10 kinds of people: those who understand binary and those who don't.", "i'd tell you a UDP joke, but you might not get it."],
+    next: ["another one", "fun fact"] },
+  { id: "thanks", keys: ["thanks", "thank you", "thx", "ty", "appreciate"],
+    say: [(c) => `of course${c.nameBit}! 💛 anything else?`, "anytime! poke around the shelf below, there's a lot more there."],
+    next: ["fun fact", "contact"] },
+  { id: "bye", keys: ["bye", "goodbye", "see you", "later", "cya", "gtg"],
+    say: [(c) => `bye${c.nameBit}! thanks for stopping by 🌼`],
+    next: ["fun fact"] },
+  { id: "help", keys: ["help", "what can i ask", "what can you do", "options", "commands"],
+    say: ["you can ask me about school, classes, internships, rider report, my research, AI, the raspberry pi, hobbies, music… or just say hi. (secret: try `sudo hire jasmine`)"],
+    next: ["who are you?", "fun fact", "AI stuff?"] },
+];
+
+const FALLBACKS = [
+  () => `hmm, i don't have a good answer for that one yet! try asking about rider report, my research, or what i'm nerding out on. or email the real me: ${CONTENT.email}`,
+  () => "ooh, good question. that one's not in my brain yet 😅 ask me about my internships, AI, or my raspberry pi?",
+];
+
 function agent() {
-  const out = $("#agent-out"), form = $("#agent-form"), input = $("#agent-input");
-  const A = CONTENT.agent;
-  const answer = (cmd) => {
-    const c = cmd.trim().toLowerCase();
-    if (!c) return null;
-    if (c === "help") return "try: whoami · classes · activities · hobbies · games · music · stack · fun fact · contact · clear";
-    if (c === "clear") { out.innerHTML = ""; return null; }
-    if (c.startsWith("sudo") && c.includes("hire")) return `permission granted ✅\n→ ${CONTENT.email}`;
-    if (c.includes("fun")) return A.funFacts[Math.floor(Math.random() * A.funFacts.length)];
-    if (c.includes("class") || c.includes("course")) return A.classes;
-    if (c.includes("activ") || c.includes("club")) return A.activities;
-    if (c.includes("hobb") || c.includes("interest")) return A.hobbies;
-    if (c.includes("game")) return A.games;
-    if (c.includes("music") || c.includes("jazz")) return A.music;
-    if (c.includes("stack") || c.includes("skill") || c.includes("lang")) return A.stack;
-    if (c.includes("contact") || c.includes("email")) return A.contact;
-    if (c.includes("who") || c.includes("about")) return A.whoami;
-    return `zsh: command not found: ${c}\ntry \`help\` (or \`sudo hire jasmine\`)`;
-  };
-  let busy = false;
-  const run = async (cmd) => {
-    if (busy) return; busy = true;
-    const q = document.createElement("div"); q.className = "q"; q.textContent = "❯ " + cmd;
-    out.appendChild(q);
-    const res = answer(cmd);
-    if (res) {
-      const a = document.createElement("div"); a.className = "a"; out.appendChild(a);
-      await typeInto(a, res, 8);
-    }
+  const out = $("#agent-out"), form = $("#agent-form"), input = $("#agent-input"), quick = $("#agent-quick");
+  const ctx = { name: "", nameBit: "", last: null, history: [] };
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const norm = (t) => " " + t.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9+#\s-]/g, " ").replace(/\s+/g, " ").trim() + " ";
+  const render = (r) => (typeof r === "function" ? r(ctx) : r);
+  const NOT_NAMES = new Set("a an the just here looking interested recruiter student hiring from new curious good fine ok okay so not doing well great tired bored back sorry wondering trying working currently also really glad happy excited on in at with".split(" "));
+
+  const bubble = (who, text) => {
+    const row = document.createElement("div");
+    row.className = `msg ${who}`;
+    if (who === "me") row.innerHTML = `<span class="avatar" aria-hidden="true">✿</span>`;
+    const b = document.createElement("div");
+    b.className = "bubble-msg";
+    b.textContent = text;
+    row.appendChild(b);
+    out.appendChild(row);
     out.scrollTop = out.scrollHeight;
+    return row;
+  };
+  const chips = (list = []) => {
+    quick.innerHTML = "";
+    list.forEach((c) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = c;
+      b.addEventListener("click", () => send(c));
+      quick.appendChild(b);
+    });
+  };
+
+  // figure out which reply fits best
+  const think = (raw) => {
+    const t = norm(raw);
+    if (/^ ?sudo .*hire/.test(t)) return { text: `permission granted ✅ let's talk: ${CONTENT.email}`, next: ["contact"] };
+    if (/^ ?clear ?$/.test(t)) { out.innerHTML = ""; return null; }
+    const m = raw.toLowerCase().match(/(?:i'?m|i am|my name is|my names|this is|call me)\s+([a-z][a-z'-]{1,20})/);
+    let gotName = false;
+    if (m && !NOT_NAMES.has(m[1])) { ctx.name = m[1][0].toUpperCase() + m[1].slice(1); ctx.nameBit = `, ${ctx.name}`; gotName = true; }
+    if (/(^| )(tell me more|more|go on|keep going|and then|elaborate|another one|wait one more thing)( |$)/.test(t) && ctx.last) {
+      const L = AGENT_BRAIN.find((i) => i.id === ctx.last);
+      if (/another one/.test(t) && (L.id === "fact" || L.id === "joke")) return { intent: L, text: render(pick([].concat(L.say))) };
+      if (L.more) return { intent: L, text: L.more, next: (L.next || []).filter((n) => n !== "tell me more") };
+    }
+    let best = null, score = 0;
+    for (const intent of AGENT_BRAIN) {
+      let s = 0;
+      for (const k of intent.keys) if (t.includes(` ${k} `)) s += k.split(" ").length + (k.length > 6 ? 0.5 : 0);
+      if (s > score) { score = s; best = intent; }
+    }
+    if (gotName && (!best || best.id === "greet" || score < 1.5)) return { text: `nice to meet you, ${ctx.name}! 🌼 i'm jasmine. what do you want to know?`, next: ["who are you?", "what are you nerding out on?", "rider report?"] };
+    if (!best) return { text: render(pick(FALLBACKS)), next: ["who are you?", "rider report?", "help"] };
+    return { intent: best, text: render(pick([].concat(best.say))) };
+  };
+
+  // optional real-AI mode: if CONTENT.agentEndpoint is set, ask it first
+  const askRemote = async (msg) => {
+    if (!CONTENT.agentEndpoint) return null;
+    try {
+      ctx.history.push({ role: "user", content: msg });
+      const r = await fetch(CONTENT.agentEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: ctx.history.slice(-12) }) });
+      const j = await r.json();
+      if (j.reply) { ctx.history.push({ role: "assistant", content: j.reply }); return j.reply; }
+    } catch (e) { console.warn("agent endpoint failed, using built-in replies", e); }
+    return null;
+  };
+
+  let busy = false;
+  const send = async (msg) => {
+    msg = msg.trim();
+    if (!msg || busy) return;
+    busy = true;
+    bubble("you", msg);
+    chips([]);
+    const typing = bubble("me", "");
+    typing.classList.add("typing");
+    $(".bubble-msg", typing).innerHTML = "<i></i><i></i><i></i>";
+    const remote = askRemote(msg);
+    const res = think(msg);
+    const remoteText = await remote;
+    const text = remoteText || res?.text;
+    await sleep(reduceMotion ? 0 : 450 + Math.min((text || "").length * 9, 1400));
+    typing.remove();
+    if (text) {
+      bubble("me", text);
+      if (res?.intent) ctx.last = res.intent.id;
+      chips(res?.next || res?.intent?.next || ["fun fact", "help"]);
+    }
     busy = false;
   };
-  form.addEventListener("submit", (e) => { e.preventDefault(); const v = input.value; input.value = ""; run(v); });
-  $$(".agent-quick button").forEach((b) => b.addEventListener("click", () => run(b.dataset.cmd)));
+
+  form.addEventListener("submit", (e) => { e.preventDefault(); const v = input.value; input.value = ""; send(v); });
+
+  // open with a greeting that knows what time it is
   let started = false;
-  whenVisible(out, (v) => { if (v && !started) { started = true; run("whoami"); } }, { threshold: 0.5 });
+  whenVisible(out, async (v) => {
+    if (!v || started) return;
+    started = true;
+    const h = new Date().getHours();
+    const hello = h < 5 ? "up late? same 🌙" : h < 12 ? "good morning! ☀️" : h < 18 ? "good afternoon! 🌤" : "good evening! 🌙";
+    const typing = bubble("me", ""); typing.classList.add("typing");
+    $(".bubble-msg", typing).innerHTML = "<i></i><i></i><i></i>";
+    await sleep(reduceMotion ? 0 : 900);
+    typing.remove();
+    bubble("me", `${hello} i'm jasmine, well, the version of me that lives on this website. ask me anything, or tell me your name first 🌼`);
+    chips(["who are you?", "what are you nerding out on?", "rider report?", "fun fact"]);
+  }, { threshold: 0.5 });
 }
 
 /* ═════════ 6. intro: laptop git log ═════════ */
