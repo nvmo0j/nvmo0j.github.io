@@ -597,3 +597,13 @@ b { color: var(--mint); font-weight: 600; }
 .num-orb { background: linear-gradient(135deg, #3b2f5c, #1d1730); color: var(--lilac); border: 1px solid var(--lilac); animation: none; font-size: 1.4rem; }
 .term-orb { border-radius: 10px; background: #000; color: #ffa028; border: 1px solid #ffa028; animation: none; font-size: .62rem; letter-spacing: -.02em; }
 .num-orb span, .term-orb span { animation: none; }
+
+/* ?og preview-capture mode: just the name + flower */
+.og .nav-links, .og .music-btn, .og .hint, .og #boot { display: none !important; }
+.og .name .ch { transition: none !important; }
+.og .tagline, .og .hint { transition: none !important; opacity: 1 !important; }
+.og .nav::after {
+  content: "nvmo0j.github.io"; margin-left: auto;
+  font-family: var(--mono); font-size: 15px; color: var(--mint);
+  padding: 5px 12px; border: 1px solid rgba(198,227,154,.4); border-radius: 999px; background: rgba(11,13,20,.6);
+}

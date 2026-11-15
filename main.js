@@ -36,7 +36,10 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 const easeOutBack = (t) => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
 const easeInOut = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// ?og renders the intro instantly, fully bloomed: used to capture the LinkedIn preview image
+const OG = new URLSearchParams(location.search).has("og");
+if (OG) document.documentElement.classList.add("og");
+const reduceMotion = OG || matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -99,7 +102,7 @@ function binaryRain() {
       drops[i] = y > h && Math.random() > 0.975 ? 0 : drops[i] + 1;
     }
   };
-  if (!reduceMotion) requestAnimationFrame(tick);
+  if (!reduceMotion || OG) requestAnimationFrame(tick);
 }
 
 /* ═════════ 3. hero: 3D jasmine bloom ═════════ */
