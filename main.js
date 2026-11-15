@@ -102,7 +102,7 @@ function binaryRain() {
       drops[i] = y > h && Math.random() > 0.975 ? 0 : drops[i] + 1;
     }
   };
-  if (!reduceMotion || OG) requestAnimationFrame(tick);
+  if (!reduceMotion) requestAnimationFrame(tick);
 }
 
 /* ═════════ 3. hero: 3D jasmine bloom ═════════ */
@@ -254,6 +254,7 @@ function hero(THREE) {
     bits.add(new THREE.Points(g, m));
   });
   rig.add(bits);
+  if (OG) bits.visible = false; // cleaner preview card
 
   // layout: flower sits right on desktop, top on mobile
   const resize = () => {
@@ -263,6 +264,7 @@ function hero(THREE) {
     const wide = w > 760;
     rig.position.set(wide ? 1.9 : 0, wide ? 1.75 : 2.2, 0);
     rig.scale.setScalar(wide ? 0.95 : 0.7);
+    if (OG) { rig.position.set(2.35, 1.55, 0); rig.scale.setScalar(1.18); }
   };
   resize(); addEventListener("resize", resize);
 

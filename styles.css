@@ -607,3 +607,29 @@ b { color: var(--mint); font-weight: 600; }
   font-family: var(--mono); font-size: 15px; color: var(--mint);
   padding: 5px 12px; border: 1px solid rgba(198,227,154,.4); border-radius: 999px; background: rgba(11,13,20,.6);
 }
+
+/* ───────── ?og preview card: big, high-contrast, readable at thumbnail size ───────── */
+.og-extra { display: none; }
+.og body {
+  background:
+    radial-gradient(520px 420px at 76% 46%, rgba(255,92,138,.16), transparent 70%),
+    radial-gradient(420px 360px at 70% 60%, rgba(198,227,154,.12), transparent 70%),
+    linear-gradient(rgba(198,227,154,.05) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, rgba(198,227,154,.05) 1px, transparent 1px) 0 0 / 40px 40px,
+    #0b0d14;
+}
+.og #rain, .og .tagline, .og .hint, .og .nav-logo { display: none !important; }
+.og .nav { background: none; backdrop-filter: none; padding: 34px 64px; }
+.og .nav::after { font-size: 20px !important; padding: 8px 18px !important; }
+.og .hero-copy { left: 64px; top: 50%; bottom: auto; transform: translateY(-50%); max-width: 640px; }
+.og .hello { font-size: 24px; margin-bottom: 14px; }
+.og .name { font-size: 132px; line-height: .88; }
+.og .name-last { color: var(--mint); -webkit-text-stroke: 0; }
+.og .og-extra { display: block; margin-top: 26px; }
+.og .og-role { margin: 0 0 18px; font-size: 30px; font-weight: 500; color: var(--text); letter-spacing: -.01em; }
+.og .og-role span { color: var(--pink); }
+.og .og-chips { list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; }
+.og .og-chips li {
+  font-family: var(--mono); font-size: 20px; padding: 6px 16px; border-radius: 999px;
+  border: 1.5px solid rgba(198,227,154,.45); color: var(--mint); background: rgba(198,227,154,.07);
+}
