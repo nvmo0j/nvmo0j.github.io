@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jasmine Jacobs · CS Portfolio</title>
+  <meta name="description" content="Jasmine Jacobs: computer science at Penn State. iOS, data pipelines, AI and hardware." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fffaf0'%3E%3Cellipse cx='50' cy='25' rx='11' ry='24'/%3E%3Cellipse cx='50' cy='25' rx='11' ry='24' transform='rotate(72 50 50)'/%3E%3Cellipse cx='50' cy='25' rx='11' ry='24' transform='rotate(144 50 50)'/%3E%3Cellipse cx='50' cy='25' rx='11' ry='24' transform='rotate(216 50 50)'/%3E%3Cellipse cx='50' cy='25' rx='11' ry='24' transform='rotate(288 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='8' fill='%23f2d46b'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ░░ BOOT SCREEN ░░ -->
+  <div id="boot" aria-hidden="true">
+    <pre id="boot-log"></pre>
+  </div>
+
+  <!-- binary rain lives behind everything -->
+  <canvas id="rain" aria-hidden="true"></canvas>
+
+  <header class="nav">
+    <a class="nav-logo" href="#hero"><span class="prompt">jj@psu</span>:<span class="path">~</span>$<span class="caret">_</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#intro">intro</a>
+      <a href="#shelf">shelf</a>
+      <a href="#levels" data-level="2">rider report</a>
+      <a href="#levels" data-level="3">research</a>
+      <a href="#levels" data-level="5">connect</a>
+    </nav>
+    <button id="music" class="music-btn" aria-pressed="false" title="play jazz">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span class="music-label">jazz: off</span>
+    </button>
+    <!-- If assets/music/afro-jazz.mp3 exists it plays directly; otherwise the Apple Music player below opens. -->
+    <audio id="jazz" src="assets/music/afro-jazz.mp3" loop preload="none"></audio>
+    <div class="jazz-pop" id="jazz-pop" hidden>
+      <div class="win-bar"><i></i><i></i><i></i><span>now_playing.app</span><button class="viewer-x" id="jazz-close" aria-label="Close player">✕</button></div>
+      <p class="mono small dim jazz-tip">press ▶ in the player · afro jazz (slowed)</p>
+      <iframe id="jazz-frame" title="Afro Jazz (Slowed) on Apple Music" height="175" frameborder="0"
+        allow="autoplay *; encrypted-media *; clipboard-write"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+        data-src="https://embed.music.apple.com/us/album/afro-jazz-slowed/1759257622?i=1759257628"></iframe>
+    </div>
+  </header>
+
+  <main>
+    <!-- ░░ HERO: the jasmine bloom ░░ -->
+    <section id="hero" class="hero">
+      <canvas id="bloom" aria-label="A 3D jasmine flower blooming"></canvas>
+      <div class="hero-copy">
+        <p class="hello mono"><span id="hello-type"></span><span class="caret">▍</span></p>
+        <h1 class="name" aria-label="Jasmine Jacobs">
+          <span class="name-line" id="name-first">jasmine</span>
+          <span class="name-line name-last" id="name-last">jacobs</span>
+        </h1>
+        <p class="tagline">computer science @ penn state · ios · data pipelines · ai · hardware</p>
+        <p class="hint mono">click the flower to re-bloom · scroll ↓</p>
+      </div>
+    </section>
+
+    <!-- ░░ INTRO: the desk scene ░░ -->
+    <section id="intro" class="section">
+      <div class="section-head">
+        <span class="mono kicker">01 / intro</span>
+        <h2>hello.... i'm jasmine <span class="wave">👋</span></h2>
+        <p class="lede">a little desk of things about me. hover to tilt, click to poke.</p>
+      </div>
+
+      <div class="desk">
+        <!-- speech bubble -->
+        <article class="card tilt bubble" style="--accent: var(--pink)">
+          <div class="bubble-tail" aria-hidden="true"></div>
+          <h3>hello, i'm jasmine</h3>
+          <dl class="facts">
+            <div><dt>major</dt><dd>B.S. Computer Science</dd></div>
+            <div><dt>minor</dt><dd>Mathematics</dd></div>
+            <div><dt>year</dt><dd>senior · class of May 2027</dd></div>
+            <!-- EDIT: hometown -->
+            <div><dt>town</dt><dd>Chicago, IL → State College, PA</dd></div>
+          </dl>
+          <p class="mono small dim">tech stack</p>
+          <ul class="chips">
+            <li>Python</li><li>Swift / SwiftUI</li><li>Java</li><li>C / C++</li><li>SQL</li>
+            <li>Firebase</li><li>Supabase</li><li>Docker</li><li>pandas</li><li>Git</li>
+          </ul>
+        </article>
+
+        <!-- AI agent terminal -->
+        <article class="card tilt agent" style="--accent: var(--mint)">
+          <div class="win-bar"><i></i><i></i><i></i><span>jasmine-agent — zsh</span></div>
+          <div class="agent-out" id="agent-out" aria-live="polite"></div>
+          <form class="agent-in" id="agent-form" autocomplete="off">
+            <label for="agent-input" class="mono">❯</label>
+            <input id="agent-input" class="mono" placeholder="ask me: classes, activities, hobbies, games…" />
+          </form>
+          <div class="agent-quick">
+            <button data-cmd="classes">classes</button>
+            <button data-cmd="activities">activities</button>
+            <button data-cmd="hobbies">hobbies</button>
+            <button data-cmd="games">games</button>
+            <button data-cmd="fun fact">fun fact</button>
+          </div>
+        </article>
+
+        <!-- interests -->
+        <article class="card tilt interests" style="--accent: var(--lilac)">
+          <p class="mono small dim">interests.json</p>
+          <h3>things i'm nerding out on</h3>
+          <div class="interest-row">
+            <div class="orb" aria-hidden="true"><span>AI</span></div>
+            <div>
+              <strong>AI &amp; agents</strong>
+              <p class="small">Claude · Gemini · OpenAI. prompt-engineering autonomous coding agents (Devin) and embedding-based matching.</p>
+            </div>
+          </div>
+          <div class="interest-row">
+            <div class="orb chip-orb" aria-hidden="true"><span>⌁</span></div>
+            <div>
+              <strong>hardware</strong>
+              <p class="small">computer organization &amp; design, assembly, and how the bits actually move. leaning toward computer engineering.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- laptop -->
+        <article class="card laptop-card" style="--accent: var(--sky)">
+          <div class="laptop" id="laptop" tabindex="0" role="button" aria-label="Open the laptop">
+            <div class="lid">
+              <div class="lid-screen">
+                <pre class="mono" id="gitlog"></pre>
+              </div>
+              <div class="lid-back"><span>jj</span></div>
+            </div>
+            <div class="base"><div class="keys"></div><div class="pad"></div></div>
+          </div>
+          <p class="caption mono">click the laptop → <code>git log --me</code></p>
+        </article>
+
+        <!-- code card -->
+        <article class="card tilt code-card" style="--accent: var(--boba)">
+          <div class="win-bar"><i></i><i></i><i></i><span id="code-file">today.py</span><button class="reroll" id="reroll" title="new snippet">↻</button></div>
+          <pre class="code mono"><code id="code"></code></pre>
+          <p class="caption mono">personalized snippet · new one every refresh</p>
+        </article>
+
+        <!-- binary -->
+        <article class="card tilt binary-card" style="--accent: var(--mint)">
+          <p class="mono small dim">name.bin</p>
+          <div class="bits" id="bits" aria-label="Jasmine in binary"></div>
+          <button class="ghost-btn mono" id="decode">decode()</button>
+        </article>
+
+        <!-- penn state -->
+        <article class="card tilt school" style="--accent: var(--psu)">
+          <!-- EDIT: swap the shield for your logo: <img src="assets/logos/psu.png" alt="Penn State"> -->
+          <div class="shield" aria-hidden="true">PSU</div>
+          <div>
+            <h3>The Pennsylvania State University</h3>
+            <p class="small">College of Engineering · University Park, PA</p>
+            <p class="small dim">B.S. CS, minor in Math · May 2027</p>
+          </div>
+        </article>
+
+        <!-- clubs -->
+        <article class="card tilt clubs" style="--accent: var(--pink)">
+          <!-- EDIT: add club logos in assets/logos/ -->
+          <p class="mono small dim">clubs[]</p>
+          <h3>President, Girls Who Code PSU</h3>
+          <ul class="chips">
+            <li>Society of Women Engineers</li>
+            <li>Association of Women in Computing</li>
+            <li>NSBE</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ░░ SHELF: click a buddy to open a level ░░ -->
+    <section id="shelf" class="section">
+      <div class="section-head">
+        <span class="mono kicker">02 / the shelf</span>
+        <h2>pick a level</h2>
+        <p class="lede">every little glow-buddy guards a level. click one (or a tab below) to open it.</p>
+      </div>
+      <div class="shelf-stage">
+        <canvas id="shelf-canvas" aria-label="A 3D shelf with five glowing figures, one per level"></canvas>
+        <div id="shelf-labels" class="shelf-labels" aria-hidden="true"></div>
+        <p class="shelf-hint mono">drag to peek · click a buddy</p>
+      </div>
+    </section>
+
+    <!-- ░░ LEVELS window ░░ -->
+    <section id="levels" class="section">
+      <div class="window">
+        <div class="win-bar big"><i></i><i></i><i></i><span id="level-title">level_1.exe</span></div>
+        <div class="tabs" role="tablist" aria-label="Levels">
+          <button role="tab" data-level="1" aria-selected="true">lvl 1 · experience</button>
+          <button role="tab" data-level="2">lvl 2 · rider report</button>
+          <button role="tab" data-level="3">lvl 3 · research</button>
+          <button role="tab" data-level="4">lvl 4 · classwork</button>
+          <button role="tab" data-level="5">lvl 5 · connect</button>
+        </div>
+
+        <!-- LEVEL 1: experience -->
+        <div class="panel" role="tabpanel" data-panel="1">
+          <h3 class="panel-title">previous experience</h3>
+          <ol class="timeline">
+            <li>
+              <div class="t-head"><strong>Infrastructure Production Services Intern</strong><span class="mono dim">Jun – Aug 2026</span></div>
+              <p class="t-org">BNY · Pittsburgh, PA</p>
+              <ul>
+                <li>Built a weekly reporting pipeline (Qlik Sense, Python/pandas, Power Query, Docker) that cleaned and validated <b>740K+</b> vulnerability records, briefing leadership daily on 420K new and 394K remediated findings.</li>
+                <li>Designed a remediation-routing framework (automatable patching vs. engineering decisions), surfacing an <b>86.9%</b> patchable rate and driving a <b>24,280-record</b> backlog reduction.</li>
+                <li>Co-developed BNYConnect, an AI employee-matching prototype: embedding-based similarity on skills, interests and mentorship goals, built with Devin via GitLab CI/CD.</li>
+              </ul>
+              <ul class="chips sm"><li>Python</li><li>pandas</li><li>Qlik Sense</li><li>Docker</li><li>embeddings</li></ul>
+            </li>
+            <li>
+              <div class="t-head"><strong>Software Engineering Intern</strong><span class="mono dim">Sep 2024 – Aug 2025</span></div>
+              <p class="t-org">Everyone Can Code Chicago · Chicago, IL</p>
+              <ul>
+                <li>Engineered the real-time Map view for Rider Report in SwiftUI + Firestore, with geolocation filtering, Firebase Auth and one-tap 911 access.</li>
+                <li>Cut crash rates by <b>25%</b>; managed GitHub review workflows.</li>
+                <li>Helped launch on the App Store (<b>5.0★</b>, 50+ users) and presented to the City of Chicago and Apple.</li>
+              </ul>
+              <ul class="chips sm"><li>SwiftUI</li><li>Firestore</li><li>Firebase Auth</li><li>GitHub</li></ul>
+            </li>
+            <li>
+              <div class="t-head"><strong>Information Technology Intern</strong><span class="mono dim">Jun – Aug 2024</span></div>
+              <p class="t-org">SDI Presence · Chicago, IL</p>
+              <ul>
+                <li>Supported data center operations for Chicago Public Safety HQ: decommissioning servers, asset inventory, Python and PowerShell automation.</li>
+                <li>Resolved enterprise hardware and ticketing issues, including hands-on support during the CrowdStrike outage.</li>
+              </ul>
+              <ul class="chips sm"><li>Python</li><li>PowerShell</li><li>data centers</li></ul>
+            </li>
+          </ol>
+        </div>
+
+        <!-- LEVEL 2: Rider Report -->
+        <div class="panel" role="tabpanel" data-panel="2" hidden>
+          <div class="project">
+            <div class="project-copy">
+              <div class="app-head">
+                <img src="assets/rider-report/icon.png" alt="" width="64" height="64" />
+                <div>
+                  <h3 class="panel-title">Rider Report</h3>
+                  <p class="mono dim small">a CTA train app · SwiftUI · Firestore</p>
+                </div>
+              </div>
+              <p>Built for riders, by riders. Chicago commuters share live updates and safety concerns about CTA trains and buses, see what's happening on their line, and reach 911 in one tap.</p>
+              <ul class="stats">
+                <li><b>5.0★</b><span>App Store</span></li>
+                <li><b>-40%</b><span>refresh latency</span></li>
+                <li><b>-25%</b><span>crash rate</span></li>
+              </ul>
+              <ul class="bullets">
+                <li>Designed Firestore data structures and query patterns for real-time ingestion.</li>
+                <li>Real-time listeners keep every screen in sync without a manual refresh.</li>
+                <li>I also designed the App Store preview screens you're swiping on →</li>
+              </ul>
+              <div class="btn-row">
+                <a class="btn" href="https://apps.apple.com/us/app/rider-report-a-cta-train-app/id6738873627" target="_blank" rel="noopener">view on the App Store ↗</a>
+                <a class="btn ghost" href="assets/gallery/rider-report-pitch.jpg" target="_blank" rel="noopener">pitch deck cover</a>
+              </div>
+            </div>
+
+            <div class="phone-stage" id="phone-stage">
+              <div class="phone" id="phone">
+                <div class="phone-front">
+                  <div class="phone-screen" id="phone-screen">
+                    <div class="island" aria-hidden="true"></div>
+                    <div class="track" id="track">
+                      <img src="assets/rider-report/screen-1.jpg" alt="Rider Report: reporting at your finger tips" draggable="false" />
+                      <img src="assets/rider-report/screen-2.jpg" alt="Rider Report preview 2" draggable="false" />
+                      <img src="assets/rider-report/screen-3.jpg" alt="Rider Report preview 3" draggable="false" />
+                      <img src="assets/rider-report/screen-4.jpg" alt="Rider Report preview 4" draggable="false" />
+                      <img src="assets/rider-report/screen-5.jpg" alt="Rider Report preview 5" draggable="false" />
+                      <img src="assets/rider-report/screen-6.jpg" alt="Rider Report preview 6" draggable="false" />
+                    </div>
+                    <div class="glare" aria-hidden="true"></div>
+                  </div>
+                </div>
+                <div class="phone-back" aria-hidden="true">
+                  <div class="cam"><i></i><i></i><i></i></div>
+                  <img src="assets/rider-report/icon.png" alt="" />
+                </div>
+              </div>
+              <div class="phone-ctrl">
+                <button id="prev" aria-label="Previous screen">‹</button>
+                <div class="dots" id="dots"></div>
+                <button id="next" aria-label="Next screen">›</button>
+                <button id="flip" class="mono" aria-label="Flip phone">flip</button>
+              </div>
+              <p class="caption mono">swipe the screen · drag the frame to rotate</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 3: research -->
+        <div class="panel" role="tabpanel" data-panel="3" hidden>
+          <h3 class="panel-title">A Study of the Commutativity of Matrix Multiplication using Binary Numbers</h3>
+          <p class="dim small">Penn State College of Engineering · Mentor: Robert A. Zambanini, Jr.</p>
+          <div class="research">
+            <div>
+              <p>Matrix multiplication usually isn't commutative. So how often does <code>AB = BA</code> hold if you check <em>every</em> 2×2 matrix with entries in {0, 1}? That's 2⁴ = 16 matrices and 16 × 16 = <b>256 ordered pairs</b>. I tested all of them in Python with NumPy.</p>
+              <pre class="code mono small"><code>AB = np.matmul(A, B)
+BA = np.matmul(B, A)
+is_commutative = np.array_equal(AB, BA)</code></pre>
+              <p><b>Result:</b> only <b>32.03%</b> of pairs commute (82 of 256). The hypothesis guessed below 25%. And over the first 16 pairs, 75% didn't commute; that settled to 67.97% across the full set.</p>
+              <a class="btn ghost" href="assets/gallery/research-poster.jpg" target="_blank" rel="noopener">view the poster ↗</a>
+            </div>
+            <div class="lab">
+              <p class="mono small dim">try it: pick A and B</p>
+              <div class="mat-pick">
+                <div><span class="mono">A</span><div class="mat-grid" id="pickA"></div></div>
+                <div><span class="mono">B</span><div class="mat-grid" id="pickB"></div></div>
+              </div>
+              <div class="mat-result mono" id="matResult"></div>
+              <button class="btn" id="runAll">run all 256 pairs ▶</button>
+              <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
+              <p class="mono small" id="runStat">commutative: 0 · non-commutative: 0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 4: classwork, pictures, conferences -->
+        <div class="panel" role="tabpanel" data-panel="4" hidden>
+          <h3 class="panel-title">classwork, pictures &amp; conferences</h3>
+          <p class="mono small dim">coursework</p>
+          <ul class="course-grid">
+            <li><span class="mono">CMPSC</span>Programming &amp; Computation Fundamentals</li>
+            <li><span class="mono">CMPSC</span>Data Structures &amp; Algorithms</li>
+            <li><span class="mono">MATH</span>Linear Algebra</li>
+            <li><span class="mono">STAT</span>Probability</li>
+            <li><span class="mono">CMPSC</span>Systems Programming</li>
+            <li><span class="mono">CMPSC</span>Database Management</li>
+            <li><span class="mono">CMPEN</span>Computer Organization &amp; Design</li>
+          </ul>
+          <div class="roll-head">
+            <p class="mono small"><span class="dim">$</span> ls ./memories <span class="dim">--tag=</span></p>
+            <div class="roll-filters" role="group" aria-label="Filter photos">
+              <button class="on" data-tag="all">all</button>
+              <button data-tag="career">career</button>
+              <button data-tag="community">community</button>
+              <button data-tag="build">build</button>
+            </div>
+          </div>
+          <!-- EDIT: to add a photo, copy one <figure> and change the src, data-* and caption.
+               data-loc = location line, data-note = longer text in the viewer, style="--pos" = crop focus -->
+          <div class="roll" id="roll">
+            <figure class="snap" data-tag="career" data-loc="google · new york, ny" data-note="visiting Google's NYC office. yes, i took the neon-sign picture." style="--pos: 22% 50%; --tilt: -2.5deg">
+              <div class="snap-bar"><i></i><span>IMG_google_nyc.jpg</span></div>
+              <div class="snap-img"><img src="assets/gallery/google-nyc.jpg" alt="Jasmine at the neon Google sign in the New York office" loading="lazy" /></div>
+              <span class="sticker" style="--c: var(--sky)">📍 nyc</span>
+              <figcaption>me @ google hq, nyc</figcaption>
+            </figure>
+            <figure class="snap dark" data-tag="community" data-loc="the bean · chicago, il" data-note="exploring chicago at night with other college students in the Discover × Capital One Sophomore SPARK program." style="--pos: 52% 60%; --tilt: 2deg">
+              <div class="snap-bar"><i></i><span>IMG_bean_night.jpg</span></div>
+              <div class="snap-img"><img src="assets/gallery/bean-chicago.jpg" alt="Jasmine at night in front of the Bean in Chicago" loading="lazy" /></div>
+              <span class="sticker" style="--c: var(--pink)">✦ sophomore spark</span>
+              <figcaption>bean @ midnight, chicago</figcaption>
+            </figure>
+            <figure class="snap" data-tag="career" data-loc="bny · pittsburgh, pa" data-note="orientation day for my infrastructure production services internship at BNY, overlooking the river." style="--pos: 50% 55%; --tilt: -1.5deg">
+              <div class="snap-bar"><i></i><span>IMG_bny_day1.jpg</span></div>
+              <div class="snap-img"><img src="assets/gallery/bny-orientation.jpg" alt="Jasmine in a black suit at BNY intern orientation, Pittsburgh bridges behind" loading="lazy" /></div>
+              <span class="sticker" style="--c: var(--boba)">git checkout -b intern</span>
+              <figcaption>bny orientation, day 1</figcaption>
+            </figure>
+            <figure class="snap wide" data-tag="community" data-loc="penn state · university park, pa" data-note="Girls Who Code at Penn State, the club i'm president of." style="--pos: 50% 50%; --tilt: 1.5deg">
+              <div class="snap-bar"><i></i><span>IMG_gwc_psu.jpg</span></div>
+              <div class="snap-img"><img src="assets/gallery/gwc-psu.jpg" alt="Girls Who Code Penn State members on a staircase" loading="lazy" /></div>
+              <span class="sticker" style="--c: var(--mint)">&lt;/&gt; president</span>
+              <figcaption>my girls who code @ psu fam</figcaption>
+            </figure>
+            <figure class="snap" data-tag="build" data-loc="penn state · college of engineering" data-note="research poster: how often does AB = BA for 2×2 binary matrices? (32.03% of the time.)" style="--pos: 50% 40%; --tilt: -2deg">
+              <div class="snap-bar"><i></i><span>poster_final_v3.jpg</span></div>
+              <div class="snap-img"><img src="assets/gallery/research-poster.jpg" alt="Research poster on matrix commutativity" loading="lazy" /></div>
+              <span class="sticker" style="--c: var(--lilac)">AB ≠ BA</span>
+              <figcaption>research poster</figcaption>
+            </figure>
+            <figure class="snap" data-tag="build" data-loc="everyone can code chicago" data-note="the Rider Report pitch deck we presented to the City of Chicago and Apple." style="--pos: 50% 50%; --tilt: 2.5deg">
+              <div class="snap-bar"><i></i><span>rider_report_pitch.key</span></div>
+              <div class="snap-img"><img src="assets/gallery/rider-report-pitch.jpg" alt="Rider Report pitch deck cover" loading="lazy" /></div>
+              <span class="sticker" style="--c: var(--sky)">★ 5.0</span>
+              <figcaption>rider report pitch</figcaption>
+            </figure>
+          </div>
+
+          <!-- photo viewer (opens when a snap is clicked) -->
+          <dialog class="viewer" id="viewer" aria-label="Photo viewer">
+            <div class="win-bar"><i></i><i></i><i></i><span id="viewer-file">viewer.app</span><button class="viewer-x" id="viewer-close" aria-label="Close">esc ✕</button></div>
+            <div class="viewer-body">
+              <button class="viewer-nav" id="viewer-prev" aria-label="Previous photo">‹</button>
+              <img id="viewer-img" alt="" />
+              <button class="viewer-nav" id="viewer-next" aria-label="Next photo">›</button>
+            </div>
+            <div class="viewer-meta">
+              <p class="hand-cap" id="viewer-cap"></p>
+              <p class="mono small" id="viewer-loc"></p>
+              <p class="small dim" id="viewer-note"></p>
+            </div>
+          </dialog>
+        </div>
+
+        <!-- LEVEL 5: connect -->
+        <div class="panel" role="tabpanel" data-panel="5" hidden>
+          <h3 class="panel-title">social + connect</h3>
+          <div class="connect">
+            <pre class="mono connect-term"><span class="dim">$</span> ping jasmine
+<span class="ok">64 bytes from jasmine: open to SWE / data / AI roles</span>
+<span class="ok">64 bytes from jasmine: response time ≈ fast</span></pre>
+            <div class="connect-links">
+              <a class="link-card" href="mailto:jasminejacobs11@icloud.com"><span class="mono">email</span>jasminejacobs11@icloud.com</a>
+              <a class="link-card" href="https://www.linkedin.com/in/jasmine-jacobs-2ab8342bb/" target="_blank" rel="noopener"><span class="mono">linkedin</span>/in/jasmine-jacobs ↗</a>
+              <a class="link-card" href="https://github.com/nvmo0j" target="_blank" rel="noopener"><span class="mono">github</span>@nvmo0j · fun ai + personal projects incoming ↗</a>
+              <a class="link-card" href="mailto:jasminejacobs11@icloud.com?subject=Resume%20request"><span class="mono">resume</span>email me for a copy ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ ENDING ░░ -->
+    <section id="ending" class="ending">
+      <svg class="mini-bloom" viewBox="-60 -60 120 120" aria-hidden="true">
+        <g class="petals">
+          <path d="M0 0 C -14 -16, -10 -46, 0 -52 C 10 -46, 14 -16, 0 0Z" />
+          <path d="M0 0 C -14 -16, -10 -46, 0 -52 C 10 -46, 14 -16, 0 0Z" />
+          <path d="M0 0 C -14 -16, -10 -46, 0 -52 C 10 -46, 14 -16, 0 0Z" />
+          <path d="M0 0 C -14 -16, -10 -46, 0 -52 C 10 -46, 14 -16, 0 0Z" />
+          <path d="M0 0 C -14 -16, -10 -46, 0 -52 C 10 -46, 14 -16, 0 0Z" />
+        </g>
+        <circle r="7" class="pistil" />
+      </svg>
+      <p class="ending-line">that's.... me, <span class="hand">jasmine!</span></p>
+      <p class="mono dim small">built with three.js, css 3d and a lot of boba · © <span id="year"></span> Jasmine Jacobs</p>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
